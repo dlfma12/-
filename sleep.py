@@ -16,9 +16,6 @@ pygame.mixer.init()
 import mediapipe as mp
 mp_face_mesh = mp.solutions.face_mesh
 
-# =========================
-# 당신이 만든 계산 함수들
-# =========================
 def calculate_ear(landmarks, eye_indices):
     left_point = landmarks[eye_indices[0]]
     right_point = landmarks[eye_indices[3]]
@@ -59,9 +56,7 @@ def draw_label_box(image, text, position, text_color=(255, 255, 255)):
     cv2.putText(image, text, position, cv2.FONT_HERSHEY_SIMPLEX, 0.8, text_color, 2, cv2.LINE_AA)
 
 
-# =========================
 # 비디오 처리 쓰레드
-# =========================
 class VideoThread(QtCore.QThread):
     frame_ready = QtCore.pyqtSignal(QtGui.QImage)
     status_msg = QtCore.pyqtSignal(str)
@@ -72,7 +67,7 @@ class VideoThread(QtCore.QThread):
         self.device_index = device_index
         self.running = False
 
-        # 임계값 (당신 코드 그대로)
+        # 임계값
         self.EAR_THRESHOLD = 0.2
         self.CLOSED_EYES_FRAMES = 30
         self.MAR_THRESHOLD = 0.7
@@ -98,8 +93,8 @@ class VideoThread(QtCore.QThread):
         self.animal_played = False
         self.robot_played = False
 
-        self.show_landmarks = True  # 향후 필요하면 사용 (지금은 HUD만 표시)
-
+        self.show_landmarks = True 
+        
     def _load_sounds(self):
         try:
             self.phone_sound = pygame.mixer.Sound(self.phone_path)
@@ -163,7 +158,7 @@ class VideoThread(QtCore.QThread):
                         mar = calculate_mar(landmarks, mouth_indices)
                         head_tilt_angle = calculate_head_tilt(landmarks)
 
-                        # 카운트 로직 (원본 그대로)
+                        # 카운트 로직
                         if ear < self.EAR_THRESHOLD:
                             self.closed_eyes_frame_count += 1
                         else:
@@ -253,9 +248,7 @@ class VideoThread(QtCore.QThread):
         self.wait(1000)
 
 
-# =========================
 # PyQt 메인 윈도우
-# =========================
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -435,3 +428,4 @@ if __name__ == "__main__":
     win = MainWindow()
     win.show()
     sys.exit(app.exec_())
+
